@@ -1,0 +1,61 @@
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'application'
+apply plugin: 'java'
+apply plugin: 'scala'
+apply plugin: 'idea'
+
+group "com.mobcrush.wowza"
+version "1.0.0-SNAPSHOT"
+
+sourceCompatibility = 1.8
+
+repositories {
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+shadowJar {
+    baseName = 'simple-module'
+    classifier = null
+    version = version
+}
+
+mainClassName = "com.mobcrush.wowza.ApplicationMain"
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.mobcrush.wowza.ApplicationMain',
+                'Implementation-Title': 'Application Main'
+    }
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.12.3'
+
+    compile name: 'wms-server'
+    compile name: 'wms-stream-publish'
+    compile name: 'wms-httpstreamer-cupertinostreaming'
+    compile name: 'wms-httpstreamer-smoothstreaming'
+    compile group: 'log4j', name: 'log4j', version: '1.2.17'
+
+    compile group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.6.2'
+}
+
