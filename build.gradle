@@ -10,12 +10,12 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
+    /*dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
-    }
+    }*/
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 apply plugin: 'java'
 apply plugin: 'scala'
@@ -32,20 +32,20 @@ repositories {
     }
 }
 
-shadowJar {
+/*shadowJar {
     baseName = 'simple-module'
     classifier = null
     version = version
-}
+}*/
 
-mainClassName = "com.mobcrush.wowza.ApplicationMain"
+/*mainClassName = "com.mobcrush.wowza.ApplicationMain"
 
 jar {
     manifest {
         attributes 'Main-Class': 'com.mobcrush.wowza.ApplicationMain',
                 'Implementation-Title': 'Application Main'
     }
-}
+}*/
 
 dependencies {
     compile 'org.scala-lang:scala-library:2.12.3'
@@ -54,6 +54,12 @@ dependencies {
     compile name: 'wms-stream-publish'
     compile name: 'wms-httpstreamer-cupertinostreaming'
     compile name: 'wms-httpstreamer-smoothstreaming'
+
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.1'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-scala_2.12', version: '2.9.0'
+
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
 
     compile group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.6.2'

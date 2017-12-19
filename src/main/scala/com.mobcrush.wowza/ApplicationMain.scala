@@ -6,8 +6,8 @@ package com.mobcrush.wowza
 object ApplicationMain {
 
   def main(args: Array[String]): Unit = {
-    val runner = new FFMpegRunner()
-    runner.run()
+//    val runner = new FFMpegRunner()
+//    runner.run()
   }
 
 }
