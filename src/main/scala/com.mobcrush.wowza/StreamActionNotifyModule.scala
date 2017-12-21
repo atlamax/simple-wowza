@@ -49,43 +49,44 @@ class StreamActionNotifyModule extends ModuleBase {
   private class StreamListener extends IMediaStreamActionNotify3 {
 
     override def onCodecInfoVideo(iMediaStream: IMediaStream, mediaCodecInfoVideo: MediaCodecInfoVideo): Unit = {
-      logger.info("StreamListener: onCodecInfoVideo")
+
+      logger.info("StreamListener: onCodecInfoVideo: " + iMediaStream.getName)
     }
 
     override def onCodecInfoAudio(iMediaStream: IMediaStream, mediaCodecInfoAudio: MediaCodecInfoAudio): Unit = {
-      logger.info("StreamListener: onCodecInfoAudio")
+      logger.info("StreamListener: onCodecInfoAudio: " + iMediaStream.getName)
     }
 
     override def onPauseRaw(iMediaStream: IMediaStream, b: Boolean, v: Double): Unit = {
-      logger.info("StreamListener: onPauseRaw")
+      logger.info("StreamListener: onPauseRaw: " + iMediaStream.getName)
     }
 
     override def onMetaData(iMediaStream: IMediaStream, amfPacket: AMFPacket): Unit = {
-      logger.info("StreamListener: onMetaData")
+      logger.info("StreamListener: onMetaData: " + iMediaStream.getName)
     }
 
     override def onSeek(iMediaStream: IMediaStream, v: Double): Unit = {
-      logger.info("StreamListener: onSeek")
+      logger.info("StreamListener: onSeek: " + iMediaStream.getName)
     }
 
     override def onPause(iMediaStream: IMediaStream, b: Boolean, v: Double): Unit = {
-      logger.info("StreamListener: onPause")
+      logger.info("StreamListener: onPause: " + iMediaStream.getName)
     }
 
     override def onPlay(iMediaStream: IMediaStream, s: String, v: Double, v1: Double, i: Int): Unit = {
-      logger.info("StreamListener: onPlay")
+      logger.info("StreamListener: onPlay: " + iMediaStream.getName)
     }
 
     override def onPublish(iMediaStream: IMediaStream, s: String, b: Boolean, b1: Boolean): Unit = {
-      logger.info("StreamListener: onPublish")
+      logger.info("StreamListener: onPublish: "  + iMediaStream.getName)
     }
 
     override def onUnPublish(iMediaStream: IMediaStream, s: String, b: Boolean, b1: Boolean): Unit = {
-      logger.info("StreamListener: onUnPublish")
+      logger.info("StreamListener: onUnPublish: " + iMediaStream.getName)
     }
 
     override def onStop(iMediaStream: IMediaStream): Unit = {
-      logger.info("StreamListener: onStop")
+      logger.info("StreamListener: onStop: " + iMediaStream.getName)
     }
   }
 

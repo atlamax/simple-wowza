@@ -1,28 +1,21 @@
 package com.mobcrush.wowza
 
-import java.nio.charset.Charset
-
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.mobcrush.wowza.model.CompositeActionModel
 import com.wowza.wms.http.{HTTPProvider2Base, IHTTPRequest, IHTTPResponse}
-import com.wowza.wms.logging.{WMSLogger, WMSLoggerFactory}
 import com.wowza.wms.vhost.IVHost
-import org.apache.commons.io.IOUtils
 
 /**
   * Created by msekerjitsky on 15.12.2017.
   */
-class HTTPCustomHandler extends HTTPProvider2Base {
+class HTTPCustomScalaHandler extends HTTPProvider2Base {
 
-  private val logger: WMSLogger = WMSLoggerFactory.getLogger(this.getClass)
+//  private val logger: WMSLogger = WMSLoggerFactory.getLogger(this.getClass)
 
-  private val MAPPER: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
+//  private val MAPPER: ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
 
   override def onHTTPRequest(host: IVHost, request: IHTTPRequest, response: IHTTPResponse): Unit = {
     response.setResponseCode(200)
     response.getOutputStream.write("Scala, Wowza!".getBytes)
-    if (!validateRequest(request, response)) {
+    /*if (!validateRequest(request, response)) {
       return
     }
 
@@ -35,24 +28,25 @@ class HTTPCustomHandler extends HTTPProvider2Base {
       case None => {
         response.setResponseCode(400)
       }
-    }
+    }*/
   }
 
-  private def parseRequestBody(requestBody: String): Option[CompositeActionModel] = {
+  /*private def parseRequestBody(requestBody: String): Option[CompositeActionModel] = {
 
     try {
-      Some(
+      /*Some(
         MAPPER.readValue(requestBody, classOf[CompositeActionModel])
-      )
+      )*/
+      None
     } catch {
       case e: Exception => {
-        logger.error("Error occurred during parsing response", e)
+//        logger.error("Error occurred during parsing response", e)
         None
       }
     }
-  }
+  }*/
 
-  private def validateRequest(request: IHTTPRequest, response: IHTTPResponse): Boolean = {
+  /*private def validateRequest(request: IHTTPRequest, response: IHTTPResponse): Boolean = {
     var isValid: Boolean = true
 
     if (!request.getMethod.equalsIgnoreCase("post")) {
@@ -61,5 +55,5 @@ class HTTPCustomHandler extends HTTPProvider2Base {
     }
 
     isValid
-  }
+  }*/
 }
