@@ -1,5 +1,9 @@
 repositories {
     mavenCentral()
+
+    flatDir {
+        dirs 'lib'
+    }
 }
 
 task wrapper(type: Wrapper) {
@@ -10,12 +14,8 @@ buildscript {
     repositories {
         jcenter()
     }
-    /*dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
-    }*/
 }
 
-//apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 apply plugin: 'java'
 apply plugin: 'scala'
@@ -26,34 +26,16 @@ version "1.0.0-SNAPSHOT"
 
 sourceCompatibility = 1.8
 
-repositories {
-    flatDir {
-        dirs 'lib'
-    }
-}
-
-/*shadowJar {
-    baseName = 'simple-module'
-    classifier = null
-    version = version
-}*/
-
-/*mainClassName = "com.mobcrush.wowza.ApplicationMain"
-
-jar {
-    manifest {
-        attributes 'Main-Class': 'com.mobcrush.wowza.ApplicationMain',
-                'Implementation-Title': 'Application Main'
-    }
-}*/
-
 dependencies {
     compile 'org.scala-lang:scala-library:2.12.3'
 
+    // Dependencies from Wowza provided at runtime
     compile name: 'wms-server'
     compile name: 'wms-stream-publish'
     compile name: 'wms-httpstreamer-cupertinostreaming'
     compile name: 'wms-httpstreamer-smoothstreaming'
+    compile group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.6'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
 
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.0'
