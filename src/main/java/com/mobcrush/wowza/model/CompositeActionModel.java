@@ -2,6 +2,8 @@ package com.mobcrush.wowza.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CompositeActionModel {
@@ -39,5 +41,33 @@ public class CompositeActionModel {
 
     public void setTargetStreamUrl(String targetStreamUrl) {
         this.targetStreamUrl = targetStreamUrl;
+    }
+
+    /****************************************
+     ********** EQUALS & HASHCODE ***********
+     ****************************************/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompositeActionModel that = (CompositeActionModel) o;
+
+        return new EqualsBuilder()
+                .append(masterStreamUrl, that.masterStreamUrl)
+                .append(slaveStreamUrl, that.slaveStreamUrl)
+                .append(targetStreamUrl, that.targetStreamUrl)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(masterStreamUrl)
+                .append(slaveStreamUrl)
+                .append(targetStreamUrl)
+                .toHashCode();
     }
 }
