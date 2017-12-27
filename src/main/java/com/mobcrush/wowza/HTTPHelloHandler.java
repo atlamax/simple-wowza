@@ -2,6 +2,7 @@ package com.mobcrush.wowza;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobcrush.wowza.model.CompositeActionModel;
+import com.mobcrush.wowza.service.FFMpegService;
 import com.wowza.wms.http.HTTPProvider2Base;
 import com.wowza.wms.http.IHTTPRequest;
 import com.wowza.wms.http.IHTTPResponse;

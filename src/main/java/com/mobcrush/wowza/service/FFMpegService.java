@@ -1,4 +1,4 @@
-package com.mobcrush.wowza;
+package com.mobcrush.wowza.service;
 
 import com.mobcrush.wowza.model.CompositeActionModel;
 import com.wowza.wms.logging.WMSLogger;
@@ -31,7 +31,7 @@ public class FFMpegService {
                         .addExtraArgs("-shortest")
                         .done();
 
-            FFmpegJob job = new FFmpegExecutor(ffmpeg, ffprobe).createJob(builder, new FFMpegProgressListener());
+            FFmpegJob job = new FFmpegExecutor(ffmpeg, ffprobe).createJob(builder);
             new Thread(() -> job.run()).start();
         } catch (Exception e) {
             LOGGER.error("Error occur during running FFMpeg", e);
