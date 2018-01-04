@@ -2,29 +2,35 @@ package com.mobcrush.wowza.service;
 
 import com.google.common.collect.Lists;
 import com.mobcrush.wowza.model.CompositeActionModel;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+import com.wowza.wms.logging.WMSLogger;
+import com.wowza.wms.logging.WMSLoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.apache.http.util.Asserts.notNull;
 
-public class InMemoryFFMpegComposingDataService implements FFMpegComposingDataService {
+public class InMemoryFFMpegComposingDataService /*implements FFMpegComposingDataService*/ {
 
-    private List<CompositeActionModel> composingData = Lists.newArrayList();
+    private static WMSLogger logger = WMSLoggerFactory.getLogger(InMemoryFFMpegComposingDataService.class);
+    private static List<CompositeActionModel> composingData = Lists.newArrayList();
 
-    @Override
-    public void add(@NotNull CompositeActionModel model) {
+//    @Override
+    public static void add(/*@NotNull */CompositeActionModel model) {
         notNull(model, "Must not be null");
 
+        logger.error("Store in context master stream name: " + model.getMasterStreamUrl());
+        logger.error("Store in context slave stream name: " + model.getSlaveStreamUrl());
+        logger.error("Store in context target stream name: " + model.getTargetStreamUrl());
         composingData.add(model);
     }
 
-    @Nullable
-    @Override
-    public CompositeActionModel get(@NotNull String streamName) {
+//    @Nullable
+//    @Override
+    public static CompositeActionModel get(/*@NotNull */String streamName) {
         notNull(streamName, "Must not be null");
+
+        logger.error("Trying to get streaming context by name: " + streamName);
 
         List<CompositeActionModel> models = composingData.stream().filter(model -> {
             return streamName.equals(model.getMasterStreamUrl())

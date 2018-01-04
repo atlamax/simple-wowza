@@ -13,6 +13,8 @@ public class FFMpegService {
 
     private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(FFMpegService.class);
 
+//    private static FFMpegComposingDataService composingDataService = new InMemoryFFMpegComposingDataService();
+
     public static void run(CompositeActionModel actionModel) {
 
         try {

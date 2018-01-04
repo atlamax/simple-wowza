@@ -1,5 +1,6 @@
 package com.mobcrush.wowza
 
+import com.mobcrush.wowza.service.{FFMpegProcessTerminator, InMemoryFFMpegComposingDataService}
 import com.wowza.wms.amf.AMFPacket
 import com.wowza.wms.application.{IApplicationInstance, WMSProperties}
 import com.wowza.wms.logging.{WMSLogger, WMSLoggerFactory}
@@ -49,12 +50,9 @@ class StreamActionNotifyModule extends ModuleBase {
   private class StreamListener extends IMediaStreamActionNotify3 {
 
     override def onCodecInfoVideo(iMediaStream: IMediaStream, mediaCodecInfoVideo: MediaCodecInfoVideo): Unit = {
-
-      logger.info("StreamListener: onCodecInfoVideo: " + iMediaStream.getName)
     }
 
     override def onCodecInfoAudio(iMediaStream: IMediaStream, mediaCodecInfoAudio: MediaCodecInfoAudio): Unit = {
-      logger.info("StreamListener: onCodecInfoAudio: " + iMediaStream.getName)
     }
 
     override def onPauseRaw(iMediaStream: IMediaStream, b: Boolean, v: Double): Unit = {
@@ -83,6 +81,21 @@ class StreamActionNotifyModule extends ModuleBase {
 
     override def onUnPublish(iMediaStream: IMediaStream, s: String, b: Boolean, b1: Boolean): Unit = {
       logger.info("StreamListener: onUnPublish: " + iMediaStream.getName)
+      val streamName = iMediaStream.getName
+
+      logger.info("StreamListener: onStop: " + streamName)
+      val actionModel = InMemoryFFMpegComposingDataService.get(streamName)
+      if (actionModel == null) {
+        logger.info("Not found matching stream data")
+        return
+      }
+
+      if (streamName.equals(actionModel.getMasterStreamUrl) || streamName.equals(actionModel.getSlaveStreamUrl)) {
+        logger.error("Master or slave stream name match")
+        FFMpegProcessTerminator.shutdown(streamName)
+      } else {
+        logger.error("Target stream name match")
+      }
     }
 
     override def onStop(iMediaStream: IMediaStream): Unit = {

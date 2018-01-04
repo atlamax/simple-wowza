@@ -3,6 +3,7 @@ package com.mobcrush.wowza;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobcrush.wowza.model.CompositeActionModel;
 import com.mobcrush.wowza.service.FFMpegService;
+import com.mobcrush.wowza.service.InMemoryFFMpegComposingDataService;
 import com.wowza.wms.http.HTTPProvider2Base;
 import com.wowza.wms.http.IHTTPRequest;
 import com.wowza.wms.http.IHTTPResponse;
@@ -59,6 +60,7 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
 
         response.setResponseCode(HttpStatus.SC_OK);
         FFMpegService.run(model);
+        storeStreamingContext(model);
     }
 
     private CompositeActionModel parseRequestBody(String requestBody) {
@@ -102,5 +104,32 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
         }
 
         return true;
+    }
+
+    private void storeStreamingContext(CompositeActionModel actionModel) {
+        actionModel.setMasterStreamUrl(parseStreamName(actionModel.getMasterStreamUrl()));
+        actionModel.setSlaveStreamUrl(parseStreamName(actionModel.getSlaveStreamUrl()));
+        actionModel.setTargetStreamUrl(parseStreamName(actionModel.getTargetStreamUrl()));
+
+        InMemoryFFMpegComposingDataService.add(actionModel);
+    }
+
+    /**
+     * Parse stream name from it's full URL
+     *
+     * @param streamUrl stream URL to parse
+     *
+     * @return stream name
+     */
+    private String parseStreamName(String streamUrl) {
+        String[] splittedUrl = streamUrl.split("/");
+
+        int streamNameIndex = splittedUrl.length - 1;
+        if (splittedUrl[streamNameIndex].isEmpty() && streamNameIndex > 0) {
+            streamNameIndex--;
+        }
+
+        logger.error("Parssed name: " + splittedUrl[streamNameIndex]);
+        return splittedUrl[streamNameIndex];
     }
 }
