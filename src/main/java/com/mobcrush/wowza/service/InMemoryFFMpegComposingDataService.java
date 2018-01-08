@@ -41,6 +41,20 @@ public class InMemoryFFMpegComposingDataService /*implements FFMpegComposingData
         return models.isEmpty() ? null : models.get(0);
     }
 
+    public static void remove(String targetStreamName) {
+        notNull(targetStreamName, "Must not be null");
+
+        logger.error("Trying to remove streaming context by name: " + targetStreamName);
+
+        List<CompositeActionModel> models = composingData.stream().filter(model -> {
+            return targetStreamName.equals(model.getTargetStreamUrl());
+        }).collect(Collectors.toList());
+
+        if (models.size() == 1) {
+            composingData.remove(models.get(0));
+        }
+    }
+
     List<CompositeActionModel> getComposingData() {
         return composingData;
     }

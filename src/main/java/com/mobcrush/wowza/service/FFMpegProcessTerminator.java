@@ -18,7 +18,14 @@ public class FFMpegProcessTerminator {
         logger.error("Final command: " + command);
 
         try {
-            Process process = Runtime.getRuntime().exec(command);
+            String[] commandsArray = {
+                    "/bin/sh",
+                    "-c",
+                    command
+            };
+
+            Process process = Runtime.getRuntime().exec(commandsArray);
+
             int status = process.waitFor();
             logger.error("Command status: " + status);
         } catch (Exception e) {

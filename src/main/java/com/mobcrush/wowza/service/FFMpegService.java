@@ -13,8 +13,6 @@ public class FFMpegService {
 
     private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(FFMpegService.class);
 
-//    private static FFMpegComposingDataService composingDataService = new InMemoryFFMpegComposingDataService();
-
     public static void run(CompositeActionModel actionModel) {
 
         try {
@@ -30,7 +28,7 @@ public class FFMpegService {
                         .setConstantRateFactor(23)
                         .setPreset("veryfast")
                         .setFormat("flv")
-                        .addExtraArgs("-shortest")
+                        .addExtraArgs("-abort_on", "empty_output")
                         .done();
 
             FFmpegJob job = new FFmpegExecutor(ffmpeg, ffprobe).createJob(builder);
