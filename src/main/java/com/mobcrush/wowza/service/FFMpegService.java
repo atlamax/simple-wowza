@@ -13,6 +13,10 @@ public class FFMpegService {
 
     private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(FFMpegService.class);
 
+    private static final String STEREO_AUDIO_COMPLEX_FILTER = ";amerge,pan=stereo|c0<c0|c1<c1";
+    private static final String MONO_AUDIO_COMPLEX_FILTER = ";[0:a][0:a]amerge=inputs=2[aout]";
+    private static final String MONO_AUDIO_MAP_PARAMETER = "-map [aout]";
+
     public static void run(CompositeActionModel actionModel) {
 
         try {
@@ -21,7 +25,7 @@ public class FFMpegService {
             FFmpegBuilder builder = new FFmpegBuilder()
                     .setInput(actionModel.getMasterStreamUrl())
                     .addInput(actionModel.getSlaveStreamUrl())
-                    .setComplexFilter("[0:v]pad=iw*2:ih[int];[int][1:v]overlay=W/2:0[vid]")
+                    .setComplexFilter("[0:v]pad=iw*2:ih[int];[int][1:v]overlay=W/2:0[vid]" + STEREO_AUDIO_COMPLEX_FILTER)
                     .addOutput(actionModel.getTargetStreamUrl())
                         .addExtraArgs("-map", "[vid]")
                         .setVideoCodec("libx264")

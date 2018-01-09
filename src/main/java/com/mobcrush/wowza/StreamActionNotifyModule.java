@@ -49,10 +49,12 @@ public class StreamActionNotifyModule extends ModuleBase {
 
         @Override
         public void onCodecInfoVideo(IMediaStream iMediaStream, MediaCodecInfoVideo mediaCodecInfoVideo) {
+//            getLogger().error("StreamListener: onCodecInfoVideo: " + iMediaStream.getName());
         }
 
         @Override
         public void onCodecInfoAudio(IMediaStream iMediaStream, MediaCodecInfoAudio mediaCodecInfoAudio) {
+            getLogger().error("StreamListener: onCodecInfoAudio: " + iMediaStream.getName());
         }
 
         @Override
