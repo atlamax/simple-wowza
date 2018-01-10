@@ -2,7 +2,7 @@ package com.mobcrush.wowza;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobcrush.wowza.model.CompositeActionModel;
-import com.mobcrush.wowza.service.FFMpegService;
+import com.mobcrush.wowza.service.FFmpegRunnerService;
 import com.mobcrush.wowza.service.InMemoryFFMpegComposingDataService;
 import com.wowza.wms.http.HTTPProvider2Base;
 import com.wowza.wms.http.IHTTPRequest;
@@ -59,7 +59,7 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
         }
 
         response.setResponseCode(HttpStatus.SC_OK);
-        FFMpegService.run(model);
+        FFmpegRunnerService.run(model);
         storeStreamingContext(model);
     }
 

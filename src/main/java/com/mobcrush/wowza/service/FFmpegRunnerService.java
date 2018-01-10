@@ -9,9 +9,9 @@ import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import net.bramp.ffmpeg.job.FFmpegJob;
 
-public class FFMpegService {
+public class FFmpegRunnerService {
 
-    private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(FFMpegService.class);
+    private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(FFmpegRunnerService.class);
 
     private static final String STEREO_AUDIO_COMPLEX_FILTER = ";amerge,pan=stereo|c0<c0|c1<c1";
     private static final String MONO_AUDIO_COMPLEX_FILTER = ";[0:a][0:a]amerge=inputs=2[aout]";
