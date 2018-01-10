@@ -1,8 +1,10 @@
 package com.mobcrush.wowza;
 
 import com.mobcrush.wowza.model.CompositeActionModel;
+import com.mobcrush.wowza.model.StreamData;
 import com.mobcrush.wowza.service.FFMpegProcessTerminator;
 import com.mobcrush.wowza.service.InMemoryFFMpegComposingDataService;
+import com.mobcrush.wowza.service.StreamDataService;
 import com.wowza.wms.amf.AMFPacket;
 import com.wowza.wms.application.IApplicationInstance;
 import com.wowza.wms.application.WMSProperties;
@@ -49,12 +51,14 @@ public class StreamActionNotifyModule extends ModuleBase {
 
         @Override
         public void onCodecInfoVideo(IMediaStream iMediaStream, MediaCodecInfoVideo mediaCodecInfoVideo) {
-//            getLogger().error("StreamListener: onCodecInfoVideo: " + iMediaStream.getName());
         }
 
         @Override
         public void onCodecInfoAudio(IMediaStream iMediaStream, MediaCodecInfoAudio mediaCodecInfoAudio) {
             getLogger().error("StreamListener: onCodecInfoAudio: " + iMediaStream.getName());
+
+            StreamData data = StreamDataService.getOrCreate(iMediaStream.getName());
+            data.setAudioChannelsNumber(mediaCodecInfoAudio.getAudioChannels());
         }
 
         @Override

@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static org.apache.http.util.Asserts.notNull;
 
-public class InMemoryFFMpegComposingDataService /*implements FFMpegComposingDataService*/ {
+public class InMemoryFFMpegComposingDataService {
 
     private static WMSLogger logger = WMSLoggerFactory.getLogger(InMemoryFFMpegComposingDataService.class);
     private static List<CompositeActionModel> composingData = Lists.newArrayList();
