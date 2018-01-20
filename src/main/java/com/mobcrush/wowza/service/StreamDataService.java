@@ -1,8 +1,11 @@
 package com.mobcrush.wowza.service;
 
 import com.mobcrush.wowza.model.StreamData;
+import com.wowza.wms.logging.WMSLogger;
+import com.wowza.wms.logging.WMSLoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -12,7 +15,25 @@ import static org.apache.commons.lang3.Validate.notNull;
  */
 public class StreamDataService {
 
+    private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(StreamDataService.class);
+
     private static ConcurrentHashMap<String, StreamData> STREAMS_DATA = new ConcurrentHashMap<>();
+
+    /**
+     * Get stream data
+     *
+     * @param streamName stream name
+     *
+     * @return stream data
+     */
+    @Nullable
+    public static StreamData get(@Nonnull String streamName) {
+        notNull(streamName, "Stream name must not be null");
+
+        LOGGER.error("StreamDataService.get: " + streamName);
+
+        return STREAMS_DATA.get(streamName);
+    }
 
     /**
      * Get stream data if it's already exists, or create new and associate with stream name
@@ -26,11 +47,13 @@ public class StreamDataService {
         notNull(streamName, "Stream name must not be null");
 
         if (STREAMS_DATA.containsKey(streamName)) {
+            LOGGER.error("StreamDataService.getOrCreate found: " + streamName);
             return STREAMS_DATA.get(streamName);
         }
 
         StreamData result = new StreamData();
         STREAMS_DATA.put(streamName, result);
+        LOGGER.error("StreamDataService.getOrCreate create new: " + streamName);
 
         return result;
     }
@@ -42,6 +65,8 @@ public class StreamDataService {
      */
     public static void remove(@Nonnull String streamName) {
         notNull(streamName, "Stream name must not be null");
+
+        LOGGER.error("StreamDataService.remove: " + streamName);
 
         STREAMS_DATA.remove(streamName);
     }

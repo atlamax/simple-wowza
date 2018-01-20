@@ -16,10 +16,20 @@ import com.wowza.wms.stream.IMediaStreamActionNotify3;
 
 public class StreamActionNotifyModule extends ModuleBase {
 
+    /**
+     * Default Wowza method
+     *
+     * @param appInstance application instance
+     */
     public void onAppStart(IApplicationInstance appInstance) {
         getLogger().info("StreamActionNotifyModule: onAppStart");
     }
 
+    /**
+     * Default Wowza method
+     *
+     * @param stream stream
+     */
     public void  onStreamCreate(IMediaStream stream ) {
         getLogger().info("onStreamCreate[" + stream + "]: clientId:" + stream.getClientId());
         StreamListener streamListener = new StreamListener();
@@ -32,6 +42,11 @@ public class StreamActionNotifyModule extends ModuleBase {
         stream.addClientListener(streamListener);
     }
 
+    /**
+     * Default Wowza method
+     *
+     * @param stream stream
+     */
     public void onStreamDestroy(IMediaStream stream) {
         getLogger().info("onStreamDestroy[" + stream + "]: clientId:" + stream.getClientId());
 
@@ -47,6 +62,9 @@ public class StreamActionNotifyModule extends ModuleBase {
         }
     }
 
+    /**
+     * Custom stream listener to handle different events
+     */
     class StreamListener implements IMediaStreamActionNotify3 {
 
         @Override
@@ -56,6 +74,7 @@ public class StreamActionNotifyModule extends ModuleBase {
         @Override
         public void onCodecInfoAudio(IMediaStream iMediaStream, MediaCodecInfoAudio mediaCodecInfoAudio) {
             getLogger().error("StreamListener: onCodecInfoAudio: " + iMediaStream.getName());
+            getLogger().error("StreamListener: onCodecInfoAudio: audioChannels: " + mediaCodecInfoAudio.getAudioChannels());
 
             StreamData data = StreamDataService.getOrCreate(iMediaStream.getName());
             data.setAudioChannelsNumber(mediaCodecInfoAudio.getAudioChannels());
@@ -93,17 +112,18 @@ public class StreamActionNotifyModule extends ModuleBase {
 
         @Override
         public void onUnPublish(IMediaStream iMediaStream, String s, boolean b, boolean bl) {
-            getLogger().info("StreamListener: onUnPublish: " + iMediaStream.getName());
             String streamName = iMediaStream.getName();
+            getLogger().info("StreamListener: onUnPublish: " + streamName);
 
             CompositeActionModel actionModel = InMemoryFFMpegComposingDataService.get(streamName);
             if (actionModel == null) {
-                getLogger().error("Not found matching stream data");
+                getLogger().error("Not found matching stream data: " + streamName);
                 return;
             }
 
             if (streamName.equals(actionModel.getMasterStreamUrl()) || streamName.equals(actionModel.getSlaveStreamUrl())) {
                 getLogger().error("Master or slave stream name match");
+                StreamDataService.remove(streamName);
                 FFMpegProcessTerminator.shutdown(actionModel.getTargetStreamUrl());
                 InMemoryFFMpegComposingDataService.remove(actionModel.getTargetStreamUrl());
             } else {

@@ -1,6 +1,7 @@
 package com.mobcrush.wowza.service;
 
 import com.mobcrush.wowza.model.CompositeActionModel;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,5 +79,25 @@ public class InMemoryFFMpegComposingDataServiceTest {
         CompositeActionModel result = sut.get(streamName);
         // then
         assertNull(result);
+    }
+
+    @Test
+    public void test() {
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput("master")
+                .addInput("slave")
+                .setComplexFilter("comple filter")
+                .addOutput("target")
+                    .addExtraArgs("-map", "[vid]")
+                    .addExtraArgs("-report")
+                    .addExtraArgs("-loglevel", "verbose")
+                    .addExtraArgs("mono_audio")
+                    .setVideoCodec("libx264")
+                    .setConstantRateFactor(23)
+                    .setPreset("veryfast")
+                    .setFormat("flv")
+                    .done();
+
+        assertNotNull(builder);
     }
 }

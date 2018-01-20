@@ -2,6 +2,7 @@ package com.mobcrush.wowza;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobcrush.wowza.model.CompositeActionModel;
+import com.mobcrush.wowza.parser.StreamNameParser;
 import com.mobcrush.wowza.service.FFmpegRunnerService;
 import com.mobcrush.wowza.service.InMemoryFFMpegComposingDataService;
 import com.wowza.wms.http.HTTPProvider2Base;
@@ -20,7 +21,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HTTPHelloHandler extends HTTPProvider2Base {
+public class CompositionStartHandler extends HTTPProvider2Base {
 
     private static final String APPLICATION_NAME = "live";
     private static final String APPLICATION_INSTANCE_NAME = "_definst_";
@@ -31,6 +32,8 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
 
     @Override
     public void onHTTPRequest(IVHost host, IHTTPRequest request, IHTTPResponse response) {
+
+        logger.error("Handle incoming request to start composition");
 
         if (!validateRequest(request, response)) {
             return;
@@ -44,6 +47,7 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
         }
 
         if (requestBody == null) {
+            logger.error("Request body is empty");
             response.setResponseCode(HttpStatus.SC_BAD_REQUEST);
             return;
         }
@@ -70,7 +74,7 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
         try {
             result = MAPPER.readValue(requestBody, CompositeActionModel.class);
         } catch (Exception e) {
-            logger.error("Error occur during parsing", e);
+            logger.error("Error occur during parsing request body", e);
         }
 
         return result;
@@ -80,6 +84,7 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
         boolean isValid = true;
 
         if (!HttpPost.METHOD_NAME.equalsIgnoreCase(request.getMethod())) {
+            logger.error("Request must use 'POST' method");
             isValid = false;
             response.setResponseCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
         }
@@ -99,6 +104,7 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
                 || !streamsUrl.contains(model.getSlaveStreamUrl())
                 || streamsUrl.contains(model.getTargetStreamUrl())
         ) {
+            logger.error("Stream names not pass validation - streams not exists or stopped");
             response.setResponseCode(HttpStatus.SC_BAD_REQUEST);
             return false;
         }
@@ -107,29 +113,16 @@ public class HTTPHelloHandler extends HTTPProvider2Base {
     }
 
     private void storeStreamingContext(CompositeActionModel actionModel) {
-        actionModel.setMasterStreamUrl(parseStreamName(actionModel.getMasterStreamUrl()));
-        actionModel.setSlaveStreamUrl(parseStreamName(actionModel.getSlaveStreamUrl()));
-        actionModel.setTargetStreamUrl(parseStreamName(actionModel.getTargetStreamUrl()));
+        actionModel.setMasterStreamUrl(
+                StreamNameParser.parseFromFullURL(actionModel.getMasterStreamUrl())
+        );
+        actionModel.setSlaveStreamUrl(
+                StreamNameParser.parseFromFullURL(actionModel.getSlaveStreamUrl())
+        );
+        actionModel.setTargetStreamUrl(
+                StreamNameParser.parseFromFullURL(actionModel.getTargetStreamUrl())
+        );
 
         InMemoryFFMpegComposingDataService.add(actionModel);
-    }
-
-    /**
-     * Parse stream name from it's full URL
-     *
-     * @param streamUrl stream URL to parse
-     *
-     * @return stream name
-     */
-    private String parseStreamName(String streamUrl) {
-        String[] splittedUrl = streamUrl.split("/");
-
-        int streamNameIndex = splittedUrl.length - 1;
-        if (splittedUrl[streamNameIndex].isEmpty() && streamNameIndex > 0) {
-            streamNameIndex--;
-        }
-
-        logger.error("Parssed name: " + splittedUrl[streamNameIndex]);
-        return splittedUrl[streamNameIndex];
     }
 }
