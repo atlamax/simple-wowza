@@ -20,7 +20,7 @@ public class FFmpegRunnerService {
 
     private static WMSLogger LOGGER = WMSLoggerFactory.getLogger(FFmpegRunnerService.class);
 
-    private static final String COMPLEX_FILTER_BASE = "[0:v]pad=iw*2:ih[int];[int][1:v]overlay=W/2:0[vid]";;
+    private static final String COMPLEX_FILTER_BASE = "[0:v]crop=iw:ih/2:0:ih/4[top];[1:v]crop=iw:ih/2:0:ih/4[bottom];[top][bottom]vstack[vid]";
     private static final String STEREO_AUDIO_COMPLEX_FILTER = ";amerge,pan=stereo|c0<c0|c1<c1";
     private static final String MONO_AUDIO_COMPLEX_FILTER = ";[0:a][0:a]amerge=inputs=2[aout]";
     private static final String[] MONO_AUDIO_MAP_PARAMETERS = new String[] {"-map", "[aout]"};
@@ -44,10 +44,12 @@ public class FFmpegRunnerService {
                     .setVerbosity(FFmpegBuilder.Verbosity.VERBOSE)
                     .addOutput(actionModel.getTargetStreamUrl())
                         .addExtraArgs("-map", "[vid]")
-                        .addExtraArgs("-report")
+//                        .addExtraArgs("-report")
                         .addExtraArgs(MONO_AUDIO_MAP_PARAMETERS)
+                        .addExtraArgs("-g", "2")
+                        .addExtraArgs("-r", "30")
                         .setVideoCodec("libx264")
-                        .setConstantRateFactor(23)
+                        .setConstantRateFactor(30)
                         .setPreset("veryfast")
                         .setFormat("flv")
                         .done();
