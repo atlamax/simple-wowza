@@ -39,7 +39,7 @@ public class FFmpegRunnerService {
             FFmpegBuilder builder = new FFmpegBuilder()
                     .setInput(actionModel.getMasterStreamUrl())
                     .addInput(actionModel.getSlaveStreamUrl())
-
+                    .addExtraArgs("-threads", "0")
                     .setComplexFilter(COMPLEX_FILTER_BASE + MONO_AUDIO_COMPLEX_FILTER)
                     .setVerbosity(FFmpegBuilder.Verbosity.VERBOSE)
                     .addOutput(actionModel.getTargetStreamUrl())
@@ -48,7 +48,6 @@ public class FFmpegRunnerService {
                         .addExtraArgs(MONO_AUDIO_MAP_PARAMETERS)
                         .addExtraArgs("-g", "2")
                         .addExtraArgs("-r", "30")
-                        .addExtraArgs("-threads", "0")
                         .setVideoCodec("libx264")
                         .setConstantRateFactor(30)
                         .setPreset("veryfast")
