@@ -48,6 +48,7 @@ public class FFmpegRunnerService {
                         .addExtraArgs(MONO_AUDIO_MAP_PARAMETERS)
                         .addExtraArgs("-g", "2")
                         .addExtraArgs("-r", "30")
+                        .addExtraArgs("-tune", "fastdecode")
                         .setVideoCodec("libx264")
                         .setConstantRateFactor(30)
                         .setPreset("veryfast")
