@@ -22,7 +22,7 @@ public class FFmpegRunnerService {
 
     private static final String COMPLEX_FILTER_BASE = "[0:v]crop=w=iw:h=ih/2[top];[1:v]crop=w=iw:h=ih/2[bottom];[top][bottom]vstack[vid]";
     private static final String STEREO_AUDIO_COMPLEX_FILTER = ";amerge,pan=stereo|c0<c0|c1<c1";
-    private static final String MONO_AUDIO_COMPLEX_FILTER = ";[0:a][0:a]amerge=inputs=2[aout]";
+    private static final String MONO_AUDIO_COMPLEX_FILTER = ";pan=stereo|c0=c0|c1=c0[aout]";
     private static final String[] MONO_AUDIO_MAP_PARAMETERS = new String[] {"-map", "[aout]"};
 
     public static void run(@Nonnull CompositeActionModel actionModel) {
